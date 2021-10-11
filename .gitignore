@@ -50,3 +50,14 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# VSCode files
+/Project/.vscode
+
+# Keil files
+/Project/DebugConfig
+/Project/Listings
+/Project/Objects
+*.uvguix.*
+*.uvoptx
+*.scvd
