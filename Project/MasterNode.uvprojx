@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER, STM32F103x6</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Core;..\Libraries\HAL_Lib\Inc;..\User\Main;..\System\sys;..\System\systick;..\System\uart</IncludePath>
+              <IncludePath>..\Core;..\Libraries\HAL_Lib\Inc;..\User\Main;..\System\sys;..\System\systick;..\System\uart;..\Hardware\led</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -657,6 +657,13 @@
         </Group>
         <Group>
           <GroupName>Hardware</GroupName>
+          <Files>
+            <File>
+              <FileName>led.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\led\led.c</FilePath>
+            </File>
+          </Files>
         </Group>
       </Groups>
     </Target>
