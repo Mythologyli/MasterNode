@@ -44,6 +44,6 @@ int main(void)
   */
 void Echo(uint8_t byte)
 {
-    LED1_Toggle;
+    LED1_Slow_Toggle;
     UART_SendChar(COM1, byte);
 }
