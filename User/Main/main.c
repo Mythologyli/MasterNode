@@ -19,7 +19,6 @@
 #include "led.h"
 
 void Echo(uint8_t byte);
-void Test_SoftSPI_Init(void);
 
 int main(void)
 {
@@ -35,13 +34,29 @@ int main(void)
 
     UART_BindReceiveHandle(COM1, Echo); //绑定 COM1 串口接收中断至 Echo 函数
 
-    Test_SoftSPI_Init(); //软件 SPI 测试初始化
+    SoftSPI_TypeDef SoftSPI;
+
+    SoftSPI.SCLK_GPIO = GPIOB;
+    SoftSPI.SCLK_Pin = GPIO_PIN_10;
+    SoftSPI.MOSI_GPIO = GPIOA;
+    SoftSPI.MOSI_Pin = GPIO_PIN_5;
+    SoftSPI.MISO_GPIO = GPIOA;
+    SoftSPI.MISO_Pin = GPIO_PIN_4;
+    SoftSPI.SS_GPIO = GPIOA;
+    SoftSPI.SS_Pin = GPIO_PIN_6;
+    SoftSPI.Delay_Time = 10;
+
+    if (SoftSPI_Init(&SoftSPI) != HAL_OK) //初始化软件 SPI
+    {
+        Error_Handler(__FILE__, __LINE__); //错误处理
+    }
+
     uint8_t write[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     uint8_t read[10];
     while (1)
     {
         //程序主循环
-        SoftSPI_WriteReadBuff(write, read, 10);
+        SoftSPI_WriteReadBuff(&SoftSPI, write, read, 10);
         Delay_us(100);
     }
 
@@ -56,27 +71,4 @@ void Echo(uint8_t byte)
 {
     LED1_Slow_Toggle;
     UART_SendChar(COM1, byte);
-}
-
-/**
-  * @brief  软件 SPI 测试初始化
-  */
-void Test_SoftSPI_Init(void)
-{
-    SoftSPI_InitTypeDef SoftSPI_Initure;
-
-    SoftSPI_Initure.SCLK_GPIO = GPIOB;
-    SoftSPI_Initure.SCLK_Pin = GPIO_PIN_10;
-    SoftSPI_Initure.MOSI_GPIO = GPIOA;
-    SoftSPI_Initure.MOSI_Pin = GPIO_PIN_5;
-    SoftSPI_Initure.MISO_GPIO = GPIOA;
-    SoftSPI_Initure.MISO_Pin = GPIO_PIN_4;
-    SoftSPI_Initure.SS_GPIO = GPIOA;
-    SoftSPI_Initure.SS_Pin = GPIO_PIN_6;
-    SoftSPI_Initure.Delay_Time = 10;
-
-    if (SoftSPI_Init(&SoftSPI_Initure) != HAL_OK) //初始化软件 SPI
-    {
-        Error_Handler(__FILE__, __LINE__); //错误处理
-    }
 }
