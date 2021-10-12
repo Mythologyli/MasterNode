@@ -313,7 +313,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>7</Optim>
+            <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER, STM32F103x6</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Core;..\Libraries\HAL_Lib\Inc;..\User\Main;..\System\sys;..\System\systick;..\System\uart;..\Hardware\led</IncludePath>
+              <IncludePath>..\Core;..\Libraries\HAL_Lib\Inc;..\Libraries\SoftSPI_HAL_Lib;..\User\Main;..\System\sys;..\System\systick;..\System\uart;..\Hardware\led</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -632,6 +632,21 @@
               <FileName>stm32f1xx_ll_usb.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Libraries\HAL_Lib\Src\stm32f1xx_ll_usb.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>SoftSPI_HAL_Lib</GroupName>
+          <Files>
+            <File>
+              <FileName>softspi_conf.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Libraries\SoftSPI_HAL_Lib\softspi_conf.h</FilePath>
+            </File>
+            <File>
+              <FileName>softspi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Libraries\SoftSPI_HAL_Lib\softspi.c</FilePath>
             </File>
           </Files>
         </Group>
