@@ -37,8 +37,6 @@ void SystemClock_Config(void)
     if (HAL_RCC_OscConfig(&oscinitstruct) != HAL_OK)
     {
         Error_Handler(__FILE__, __LINE__);
-        while (1)
-            ;
     }
 
     /* Select PLL as system clock source and configure the HCLK, PCLK1 and PCLK2 
@@ -51,8 +49,6 @@ void SystemClock_Config(void)
     if (HAL_RCC_ClockConfig(&clkinitstruct, FLASH_LATENCY_2) != HAL_OK)
     {
         Error_Handler(__FILE__, __LINE__);
-        while (1)
-            ;
     }
 }
 
