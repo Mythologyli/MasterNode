@@ -1,0 +1,3 @@
+[submodule "Libraries/SoftSPI_HAL_Lib"]
+	path = Libraries/SoftSPI_HAL_Lib
+	url = https://hub.akashic.cc/GML-Group/SoftSPI_HAL_Lib.git
