@@ -313,7 +313,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>1</Optim>
+            <Optim>7</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER, STM32F103x6</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Core;..\Libraries\HAL_Lib\Inc;..\Libraries\SoftSPI_HAL_Lib;..\User\Main;..\System\sys;..\System\systick;..\System\uart;..\Hardware\led</IncludePath>
+              <IncludePath>..\Core;..\Libraries\HAL_Lib\Inc;..\Libraries\SoftSPI_HAL_Lib;..\Libraries\SX1278\driver;..\User\Main;..\System\sys;..\System\systick;..\System\uart;..\Hardware\led;..\Hardware\lora</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -651,6 +651,21 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>SX1278</GroupName>
+          <Files>
+            <File>
+              <FileName>SX1278.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Libraries\SX1278\driver\SX1278.c</FilePath>
+            </File>
+            <File>
+              <FileName>SX1278_hw.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Libraries\SX1278\driver\SX1278_hw.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>System</GroupName>
           <Files>
             <File>
@@ -677,6 +692,11 @@
               <FileName>led.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Hardware\led\led.c</FilePath>
+            </File>
+            <File>
+              <FileName>lora.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\lora\lora.c</FilePath>
             </File>
           </Files>
         </Group>

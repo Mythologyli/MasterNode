@@ -18,7 +18,7 @@
 COM_PORT_E printf_Com = COM1;
 COM_PORT_E getchar_Com = COM1;
 
-//USART1 PA9 PA10
+// USART1 PA9 PA10
 #define USART1_CLK_ENABLE() __HAL_RCC_USART1_CLK_ENABLE()
 
 #define USART1_TX_GPIO_CLK_ENABLE() __HAL_RCC_GPIOA_CLK_ENABLE()
@@ -29,7 +29,7 @@ COM_PORT_E getchar_Com = COM1;
 #define USART1_RX_GPIO_PORT GPIOA
 #define USART1_RX_PIN GPIO_PIN_10
 
-//USART2 PA2 PA3
+// USART2 PA2 PA3
 #define USART2_CLK_ENABLE() __HAL_RCC_USART2_CLK_ENABLE()
 
 #define USART2_TX_GPIO_CLK_ENABLE() __HAL_RCC_GPIOA_CLK_ENABLE()
@@ -60,8 +60,8 @@ static uint8_t UART_T_GetChar(UART_T *_pUART, uint8_t *_pByte);
 static void UART_T_IRQ(UART_T *_pUART);
 
 /**
-  * @brief  初始化串口
-  */
+ * @brief  初始化串口
+ */
 void UART_Init(void)
 {
     UART_Var_Init(); //初始化全局变量
@@ -70,10 +70,10 @@ void UART_Init(void)
 }
 
 /**
-  * @brief  将 COM 端口号转换为 UART 指针
-  * @param  _ucPort: 端口号 (COM1-2)
-  * @retval UART 指针
-  */
+ * @brief  将 COM 端口号转换为 UART 指针
+ * @param  _ucPort: 端口号 (COM1-2)
+ * @retval UART 指针
+ */
 UART_T *ComToUART(COM_PORT_E _ucPort)
 {
     if (_ucPort == COM1)
@@ -99,10 +99,10 @@ UART_T *ComToUART(COM_PORT_E _ucPort)
 }
 
 /**
-  * @brief  将 COM 端口号转换为 USART_TypeDef*
-  * @param  _ucPort: 端口号 (COM1-2)
-  * @retval USART_TypeDef*
-  */
+ * @brief  将 COM 端口号转换为 USART_TypeDef*
+ * @param  _ucPort: 端口号 (COM1-2)
+ * @retval USART_TypeDef*
+ */
 USART_TypeDef *ComToUSARTx(COM_PORT_E _ucPort)
 {
     if (_ucPort == COM1)
@@ -128,11 +128,11 @@ USART_TypeDef *ComToUSARTx(COM_PORT_E _ucPort)
 }
 
 /**
-  * @brief  向串口发送一组数据。数据放到发送缓冲区后立即返回，由中断服务程序在后台完成发送
-  * @param  _ucPort: 端口号 (COM1-2)
-  * @param  _ucaBuf: 待发送的数据缓冲区
-  * @param  _usLen : 数据长度
-  */
+ * @brief  向串口发送一组数据。数据放到发送缓冲区后立即返回，由中断服务程序在后台完成发送
+ * @param  _ucPort: 端口号 (COM1-2)
+ * @param  _ucaBuf: 待发送的数据缓冲区
+ * @param  _usLen : 数据长度
+ */
 void UART_SendBuff(COM_PORT_E _ucPort, uint8_t *_ucaBuf, uint16_t _usLen)
 {
     UART_T *pUART;
@@ -147,21 +147,21 @@ void UART_SendBuff(COM_PORT_E _ucPort, uint8_t *_ucaBuf, uint16_t _usLen)
 }
 
 /**
-  * @brief  向串口发送 1 个字节。数据放到发送缓冲区后立即返回，由中断服务程序在后台完成发送
-  * @param  _ucPort: 端口号 (COM1-2)
-  * @param  _ucByte: 待发送的数据
-  */
+ * @brief  向串口发送 1 个字节。数据放到发送缓冲区后立即返回，由中断服务程序在后台完成发送
+ * @param  _ucPort: 端口号 (COM1-2)
+ * @param  _ucByte: 待发送的数据
+ */
 void UART_SendChar(COM_PORT_E _ucPort, uint8_t _ucByte)
 {
     UART_SendBuff(_ucPort, &_ucByte, 1);
 }
 
 /**
-  * @brief  从接收缓冲区读取 1 字节，非阻塞。无论有无数据均立即返回
-  * @param  _ucPort: 端口号 (COM1-2)
-  * @param  _pByte: 接收到的数据指针
-  * @retval 0 表示无数据，1 表示读取到有效字节
-  */
+ * @brief  从接收缓冲区读取 1 字节，非阻塞。无论有无数据均立即返回
+ * @param  _ucPort: 端口号 (COM1-2)
+ * @param  _pByte: 接收到的数据指针
+ * @retval 0 表示无数据，1 表示读取到有效字节
+ */
 uint8_t UART_GetChar(COM_PORT_E _ucPort, uint8_t *_pByte)
 {
     UART_T *pUART;
@@ -176,13 +176,13 @@ uint8_t UART_GetChar(COM_PORT_E _ucPort, uint8_t *_pByte)
 }
 
 /**
-  * @brief  从接收缓冲区读取到特定字节，阻塞，有超时
-  * @param  _ucPort: 端口号 (COM1-2)
-  * @param  _pBuf: 接收到的数据指针
-  * @param  _endByte: 终止字节
-  * @param  _timeout: 超时时间
-  * @retval 0 表示超时，1 表示成功
-  */
+ * @brief  从接收缓冲区读取到特定字节，阻塞，有超时
+ * @param  _ucPort: 端口号 (COM1-2)
+ * @param  _pBuf: 接收到的数据指针
+ * @param  _endByte: 终止字节
+ * @param  _timeout: 超时时间
+ * @retval 0 表示超时，1 表示成功
+ */
 uint8_t UART_GetBuffUntil(COM_PORT_E _ucPort, uint8_t *_pBuf, uint8_t _endByte, uint16_t _timeout)
 {
     uint8_t ch;
@@ -210,9 +210,9 @@ uint8_t UART_GetBuffUntil(COM_PORT_E _ucPort, uint8_t *_pBuf, uint8_t _endByte, 
 }
 
 /**
-  * @brief  清零串口发送缓冲区
-  * @param  _ucPort: 端口号 (COM1-2)
-  */
+ * @brief  清零串口发送缓冲区
+ * @param  _ucPort: 端口号 (COM1-2)
+ */
 void UART_ClearTxFIFO(COM_PORT_E _ucPort)
 {
     UART_T *pUART;
@@ -229,9 +229,9 @@ void UART_ClearTxFIFO(COM_PORT_E _ucPort)
 }
 
 /**
-  * @brief  清零串口接收缓冲区
-  * @param  _ucPort: 端口号 (COM1-2)
-  */
+ * @brief  清零串口接收缓冲区
+ * @param  _ucPort: 端口号 (COM1-2)
+ */
 void UART_ClearRxFIFO(COM_PORT_E _ucPort)
 {
     UART_T *pUART;
@@ -248,10 +248,10 @@ void UART_ClearRxFIFO(COM_PORT_E _ucPort)
 }
 
 /**
-  * @brief  设置串口的波特率。无校验，收发都使能
-  * @param  _ucPort: 端口号 (COM1-2)
-  * @param  _BaudRate: 波特率
-  */
+ * @brief  设置串口的波特率。无校验，收发都使能
+ * @param  _ucPort: 端口号 (COM1-2)
+ * @param  _BaudRate: 波特率
+ */
 void UART_SetBaud(COM_PORT_E _ucPort, uint32_t _BaudRate)
 {
     USART_TypeDef *USARTx;
@@ -266,10 +266,10 @@ void UART_SetBaud(COM_PORT_E _ucPort, uint32_t _BaudRate)
 }
 
 /**
-  * @brief  设置串口接受中断处理函数
-  * @param  _ucPort: 端口号 (COM1-2)
-  * @param  Receive: 中断处理函数
-  */
+ * @brief  设置串口接受中断处理函数
+ * @param  _ucPort: 端口号 (COM1-2)
+ * @param  Receive: 中断处理函数
+ */
 void UART_BindReceiveHandle(COM_PORT_E _ucPort, UARTReceiveHandler Receive)
 {
     UART_T *pUART;
@@ -284,8 +284,8 @@ void UART_BindReceiveHandle(COM_PORT_E _ucPort, UARTReceiveHandler Receive)
 }
 
 /**
-  * @brief  初始化串口相关的变量
-  */
+ * @brief  初始化串口相关的变量
+ */
 static void UART_Var_Init(void)
 {
 #if UART1_FIFO_EN == 1
@@ -322,12 +322,12 @@ static void UART_Var_Init(void)
 }
 
 /**
-  * @brief  配置串口的硬件参数
-  * @param  Instance: USART_TypeDef*
-  * @param  BaudRate: 波特率
-  * @param  Parity: 校验类型，奇校验或者偶校验
-  * @param  Mode: 发送和接收模式使能
-  */
+ * @brief  配置串口的硬件参数
+ * @param  Instance: USART_TypeDef*
+ * @param  BaudRate: 波特率
+ * @param  Parity: 校验类型，奇校验或者偶校验
+ * @param  Mode: 发送和接收模式使能
+ */
 void UART_SetUARTParam(USART_TypeDef *Instance, uint32_t BaudRate, uint32_t Parity, uint32_t Mode)
 {
     UART_HandleTypeDef UARTHandle;
@@ -346,8 +346,8 @@ void UART_SetUARTParam(USART_TypeDef *Instance, uint32_t BaudRate, uint32_t Pari
 }
 
 /**
-  * @brief  配置串口的硬件参数
-  */
+ * @brief  配置串口的硬件参数
+ */
 static void UART_Hard_Init(void)
 {
     GPIO_InitTypeDef GPIO_InitStruct;
@@ -406,11 +406,11 @@ static void UART_Hard_Init(void)
 }
 
 /**
-  * @brief  填写数据到 UART 发送缓冲区，并启动发送中断。中断处理函数发送完毕后，自动关闭发送中断
-  * @param  _pUART
-  * @param  _ucaBuf
-  * @param  _usLen
-  */
+ * @brief  填写数据到 UART 发送缓冲区，并启动发送中断。中断处理函数发送完毕后，自动关闭发送中断
+ * @param  _pUART
+ * @param  _ucaBuf
+ * @param  _usLen
+ */
 static void UART_T_Send(UART_T *_pUART, uint8_t *_ucaBuf, uint16_t _usLen)
 {
     uint16_t i;
@@ -455,11 +455,11 @@ static void UART_T_Send(UART_T *_pUART, uint8_t *_ucaBuf, uint16_t _usLen)
 }
 
 /**
-  * @brief  填写数据到 UART 发送缓冲区，并启动发送中断。中断处理函数发送完毕后，自动关闭发送中断
-  * @param  _pUART
-  * @param  _pByte
-  * @retval 成功返回 1，失败返回 0
-  */
+ * @brief  填写数据到 UART 发送缓冲区，并启动发送中断。中断处理函数发送完毕后，自动关闭发送中断
+ * @param  _pUART
+ * @param  _pByte
+ * @retval 成功返回 1，失败返回 0
+ */
 static uint8_t UART_T_GetChar(UART_T *_pUART, uint8_t *_pByte)
 {
     uint16_t usCount;
@@ -490,10 +490,10 @@ static uint8_t UART_T_GetChar(UART_T *_pUART, uint8_t *_pByte)
 }
 
 /**
-  * @brief  判断发送缓冲区是否为空
-  * @param  _ucPort
-  * @retval 1 为空，0 为不空
-  */
+ * @brief  判断发送缓冲区是否为空
+ * @param  _ucPort
+ * @retval 1 为空，0 为不空
+ */
 uint8_t UART_IsTxEmpty(COM_PORT_E _ucPort)
 {
     UART_T *pUART;
@@ -515,9 +515,9 @@ uint8_t UART_IsTxEmpty(COM_PORT_E _ucPort)
 }
 
 /**
-  * @brief  供中断服务程序调用，通用串口中断处理函数
-  * @param  _pUART
-  */
+ * @brief  供中断服务程序调用，通用串口中断处理函数
+ * @param  _pUART
+ */
 static void UART_T_IRQ(UART_T *_pUART)
 {
     uint32_t isrflags = READ_REG(_pUART->uart->SR);

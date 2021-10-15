@@ -21,6 +21,8 @@
 
 void SystemClock_Config(void);
 
+void DisableJTAG(void);
+
 void Error_Handler(uint8_t *file, uint32_t line);
 
 #endif

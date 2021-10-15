@@ -22,8 +22,8 @@ void SysTick_ISR(void);
 static void SysTick_SoftTimerDec(SOFT_TMR *_tmr);
 
 /**
-  * @brief  配置 SysTick 中断，并初始化软件定时器
-  */
+ * @brief  配置 SysTick 中断，并初始化软件定时器
+ */
 void SysTick_Init(void)
 {
     //清零所有的软件定时器
@@ -42,8 +42,8 @@ void SysTick_Init(void)
 }
 
 /**
-  * @brief  供中断服务程序调用
-  */
+ * @brief  供中断服务程序调用
+ */
 void SysTick_ISR(void)
 {
     static uint8_t s_count = 0;
@@ -97,9 +97,9 @@ static void SysTick_SoftTimerDec(SOFT_TMR *_tmr)
 }
 
 /**
-  * @brief  ms 延时
-  * @param  n: 延时数
-  */
+ * @brief  ms 延时
+ * @param  n: 延时数
+ */
 void Delay_ms(uint32_t n)
 {
     if (n == 0)
@@ -122,9 +122,9 @@ void Delay_ms(uint32_t n)
 }
 
 /**
-  * @brief  us 延时
-  * @param  n: 延时数
-  */
+ * @brief  us 延时
+ * @param  n: 延时数
+ */
 void Delay_us(uint32_t n)
 {
     uint32_t ticks;
@@ -158,10 +158,10 @@ void Delay_us(uint32_t n)
 }
 
 /**
-  * @brief  启动一个定时器，并设置定时周期
-  * @param  _id: 定时器 ID
-  * @param  _period: 定时周期，单位 ms
-  */
+ * @brief  启动一个定时器，并设置定时周期
+ * @param  _id: 定时器 ID
+ * @param  _period: 定时周期，单位 ms
+ */
 void SysTick_StartTimer(uint8_t _id, uint32_t _period)
 {
     DISABLE_INT();
@@ -175,10 +175,10 @@ void SysTick_StartTimer(uint8_t _id, uint32_t _period)
 }
 
 /**
-  * @brief  启动一个自动定时器，并设置定时周期
-  * @param  _id: 定时器 ID
-  * @param  _period: 定时周期，单位 ms
-  */
+ * @brief  启动一个自动定时器，并设置定时周期
+ * @param  _id: 定时器 ID
+ * @param  _period: 定时周期，单位 ms
+ */
 void SysTick_StartAutoTimer(uint8_t _id, uint32_t _period)
 {
     DISABLE_INT();
@@ -192,9 +192,9 @@ void SysTick_StartAutoTimer(uint8_t _id, uint32_t _period)
 }
 
 /**
-  * @brief  停止一个定时器
-  * @param  _id: 定时器 ID
-  */
+ * @brief  停止一个定时器
+ * @param  _id: 定时器 ID
+ */
 void SysTick_StopTimer(uint8_t _id)
 {
     DISABLE_INT();
@@ -207,11 +207,11 @@ void SysTick_StopTimer(uint8_t _id)
 }
 
 /**
-  * @brief  检测定时器是否超时
-  * @param  _id: 定时器 ID
-  * @param  _period: 定时周期
-  * @retval 返回 0 表示定时未到，1 表示定时到
-  */
+ * @brief  检测定时器是否超时
+ * @param  _id: 定时器 ID
+ * @param  _period: 定时周期
+ * @retval 返回 0 表示定时未到，1 表示定时到
+ */
 uint8_t SysTick_CheckTimer(uint8_t _id)
 {
     if (_id >= TMR_COUNT)
@@ -229,9 +229,9 @@ uint8_t SysTick_CheckTimer(uint8_t _id)
 }
 
 /**
-  * @brief  获取运行时间，单位 ms。最长可以表示 24.85 天
-  * @retval 运行时间
-  */
+ * @brief  获取运行时间，单位 ms。最长可以表示 24.85 天
+ * @retval 运行时间
+ */
 int32_t SysTick_GetRunTime(void)
 {
     int32_t runtime;
@@ -246,10 +246,10 @@ int32_t SysTick_GetRunTime(void)
 }
 
 /**
-  * @brief  计算当前运行时间和给定时刻之间的差值。处理了计数器循环
-  * @param  _LastTime: 上个时刻
-  * @retval 当前时间和过去时间的差值，单位 ms
-  */
+ * @brief  计算当前运行时间和给定时刻之间的差值。处理了计数器循环
+ * @param  _LastTime: 上个时刻
+ * @retval 当前时间和过去时间的差值，单位 ms
+ */
 int32_t SysTick_CheckRunTime(int32_t _LastTime)
 {
     int32_t now_time;
@@ -270,8 +270,8 @@ int32_t SysTick_CheckRunTime(int32_t _LastTime)
 }
 
 /**
-  * @brief  SysTick 中断服务程序
-  */
+ * @brief  SysTick 中断服务程序
+ */
 void SysTick_Handler(void)
 {
     HAL_IncTick();

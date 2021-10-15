@@ -10,18 +10,18 @@
 #include "sys.h"
 
 /**
-  * @brief  系统时钟配置
-  *         System Clock source            = PLL (HSE)
-  *         SYSCLK(Hz)                     = 72000000
-  *         HCLK(Hz)                       = 72000000
-  *         AHB Prescaler                  = 1
-  *         APB1 Prescaler                 = 2
-  *         APB2 Prescaler                 = 1
-  *         HSE Frequency(Hz)              = 8000000
-  *         HSE PREDIV1                    = 1
-  *         PLLMUL                         = 9
-  *         Flash Latency(WS)              = 2
-  */
+ * @brief  系统时钟配置
+ *         System Clock source            = PLL (HSE)
+ *         SYSCLK(Hz)                     = 72000000
+ *         HCLK(Hz)                       = 72000000
+ *         AHB Prescaler                  = 1
+ *         APB1 Prescaler                 = 2
+ *         APB2 Prescaler                 = 1
+ *         HSE Frequency(Hz)              = 8000000
+ *         HSE PREDIV1                    = 1
+ *         PLLMUL                         = 9
+ *         Flash Latency(WS)              = 2
+ */
 void SystemClock_Config(void)
 {
     RCC_ClkInitTypeDef clkinitstruct = {0};
@@ -39,7 +39,7 @@ void SystemClock_Config(void)
         Error_Handler(__FILE__, __LINE__);
     }
 
-    /* Select PLL as system clock source and configure the HCLK, PCLK1 and PCLK2 
+    /* Select PLL as system clock source and configure the HCLK, PCLK1 and PCLK2
      clocks dividers */
     clkinitstruct.ClockType = (RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2);
     clkinitstruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
@@ -53,11 +53,20 @@ void SystemClock_Config(void)
 }
 
 /**
-  * @brief  错误处理函数。调用后通过 printf 报告错误文件、行数并进入死循环
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
+ * @brief  禁用 JTAG，释放相应 GPIO
+ */
+void DisableJTAG(void)
+{
+    __HAL_RCC_AFIO_CLK_ENABLE();
+    __HAL_AFIO_REMAP_SWJ_NOJTAG();
+}
+
+/**
+ * @brief  错误处理函数。调用后通过 printf 报告错误文件、行数并进入死循环
+ * @param  file: pointer to the source file name
+ * @param  line: assert_param error line source number
+ * @retval None
+ */
 void Error_Handler(uint8_t *file, uint32_t line)
 {
     printf("Error occurred: file %s on line %d\r\n", file, line);
@@ -69,10 +78,10 @@ void Error_Handler(uint8_t *file, uint32_t line)
 #ifdef USE_FULL_ASSERT
 
 /**
-  * @brief  assert_param 依赖函数
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  */
+ * @brief  assert_param 依赖函数
+ * @param  file: pointer to the source file name
+ * @param  line: assert_param error line source number
+ */
 void assert_failed(uint8_t *file, uint32_t line)
 {
     printf("Wrong parameters value: file %s on line %d\r\n", file, line);
