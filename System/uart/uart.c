@@ -10,7 +10,6 @@
 
 #include "stdio.h"
 
-#include "sys.h"
 #include "systick.h"
 
 #include "uart.h"

@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER, STM32F103x6</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Core;..\Libraries\HAL_Lib\Inc;..\Libraries\SoftSPI_HAL_Lib;..\Libraries\SX1278\driver;..\User\Main;..\System\sys;..\System\systick;..\System\uart;..\Hardware\led;..\Hardware\lora</IncludePath>
+              <IncludePath>..\Core;..\Libraries\HAL_Lib\Inc;..\Libraries\SoftSPI_HAL_Lib;..\Libraries\SX1278\driver;..\User\Main;..\System\sys;..\System\systick;..\System\uart;..\Hardware\led;..\Hardware\lora;..\Hardware\esp32s</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -697,6 +697,11 @@
               <FileName>lora.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Hardware\lora\lora.c</FilePath>
+            </File>
+            <File>
+              <FileName>esp32s.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\esp32s\esp32s.c</FilePath>
             </File>
           </Files>
         </Group>
