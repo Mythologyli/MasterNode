@@ -35,6 +35,8 @@ typedef struct
     uint8_t end;
 } DataPack; //数据包定义，由于平台相同，网关和节点通讯无需考虑对齐问题
 
+uint8_t CheckCOM1State(void);
+
 int main(void)
 {
     if (HAL_Init() != HAL_OK) //初始化 HAL 库
@@ -44,7 +46,16 @@ int main(void)
     SystemClock_Config(); //初始化系统时钟为 72MHz
     DisableJTAG();        //禁用 JTAG
     SysTick_Init();       //初始化 SysTick 和软件定时器
-    UART_Init();          //初始化串口
+
+    uint8_t is_use_wlan = 0;
+    uint16_t loop_time = 400;
+    if (CheckCOM1State())
+    {
+        is_use_wlan = 1;
+        loop_time = 1000;
+    }
+
+    UART_Init(); //初始化串口
 
     LED_Init();    //初始化 LED
     LoRa_Init();   //初始化 LoRa 模块
@@ -76,23 +87,26 @@ int main(void)
 
         //正确的方式是读取 DIO0 上的发送空中断。由于实验板 DIO0 无法接线，无法判断数据是否发送完毕，因此采用延时
 
-        time = SysTick_GetRunTime();              //获取当前时间
-        ESP32S_ClearRx();                         //清接收 FIFO
-        ESP32S_ClearTx();                         //清发送 FIFO
-        while (SysTick_CheckRunTime(time) < 1000) // 1000ms 时间用以等待子节点返回数据
+        time = SysTick_GetRunTime();                   //获取当前时间
+        ESP32S_ClearRx();                              //清接收 FIFO
+        ESP32S_ClearTx();                              //清发送 FIFO
+        while (SysTick_CheckRunTime(time) < loop_time) // 1000ms 时间用以等待子节点返回数据
         {
-            //在等待 LoRa 模块回传数据的同时，发送上一次收到的包。200ms 发送一次，无阻塞，检测是否有正确返回
-            if (!is_first_run && SysTick_CheckRunTime(time) >= send_times * 200)
+            if (is_use_wlan)
             {
-                ESP32S_Send(send_buff, send_len); //通过 ESP32-S 发向 TCP 服务器
-                send_times++;
+                //在等待 LoRa 模块回传数据的同时，发送上一次收到的包。200ms 发送一次，无阻塞，检测是否有正确返回
+                if (!is_first_run && SysTick_CheckRunTime(time) >= send_times * 200)
+                {
+                    ESP32S_Send(send_buff, send_len); //通过 ESP32-S 发向 TCP 服务器
+                    send_times++;
 
-                if (ESP32S_ReceiveByte(&receive_byte) && (receive_byte == 'O' || receive_byte == 'K'))
-                    send_times = 255; //标记为 255，表示已正确返回。TCP 服务器应对符合格式的数据返回 OK
+                    if (ESP32S_ReceiveByte(&receive_byte) && (receive_byte == 'O' || receive_byte == 'K'))
+                        send_times = 255; //标记为 255，表示已正确返回。TCP 服务器应对符合格式的数据返回 OK
 
-                //注意：TCP 服务端实现
-                //即使收到测量错误或重复的数据，只要符合 & 格式也应返回 OK
-                //网关侧并未对数据作合理性判断，如果 TCP 服务端不对不合理数据返回 OK，网关端会认为是网络问题而不断重传
+                    //注意：TCP 服务端实现
+                    //即使收到测量错误或重复的数据，只要符合 & 格式也应返回 OK
+                    //网关侧并未对数据作合理性判断，如果 TCP 服务端不对不合理数据返回 OK，网关端会认为是网络问题而不断重传
+                }
             }
 
             size = LoRa_Receive(&pack); //由于 DIO0 无法使用，此函数不阻塞，需判断是否接收成功
@@ -102,33 +116,35 @@ int main(void)
             }
             else if (size != sizeof(DataPack) || pack.seq != current_seq || pack.end != '@') //判断数据包是否正确，是否来自要查询的节点
             {
-                printf("Wrong Data, Size: %d\n", size);
+                // printf("Wrong Data, Size: %d\n", size);
                 continue;
             }
 
             LED1_Toggle; //收到有效数据，LED1 翻转
 
             //通过 COM1 向电脑发送数据
-            printf("Get data:\n");
+            // printf("Get data:\n");
             printf("%c&%.1f&%.1f&%.1f&\n", pack.seq, pack.humi, pack.temp, pack.light);
 
-            if (!is_first_run && send_times != 255) //上一个包未正确返回，先将上一个包发送完成，防止丢包
+            if (is_use_wlan)
             {
-                while (1)
+                if (!is_first_run && send_times != 255) //上一个包未正确返回，先将上一个包发送完成，防止丢包
                 {
-                    ESP32S_Send(send_buff, send_len);                                                      //通过 ESP32-S 发向 TCP 服务器
-                    if (ESP32S_ReceiveByte(&receive_byte) && (receive_byte == 'O' || receive_byte == 'K')) //检测是否有回传数据证明发送成功
-                        break;
+                    while (1)
+                    {
+                        ESP32S_Send(send_buff, send_len);                                                      //通过 ESP32-S 发向 TCP 服务器
+                        if (ESP32S_ReceiveByte(&receive_byte) && (receive_byte == 'O' || receive_byte == 'K')) //检测是否有回传数据证明发送成功
+                            break;
 
-                    Delay_ms(200); //防止发送过快
+                        Delay_ms(200); //防止发送过快
+                    }
                 }
+
+                //生成下一个包，这个包在下次查询时发送
+                send_len = sprintf(send_buff, "%c&%.1f&%.1f&%.1f&", pack.seq, pack.humi, pack.temp, pack.light) + 1; //上行数据
+                is_first_run = 0;
+                send_times = 0;
             }
-
-            //生成下一个包，这个包在下次查询时发送
-            send_len = sprintf(send_buff, "%c&%.1f&%.1f&%.1f&", pack.seq, pack.humi, pack.temp, pack.light) + 1; //上行数据
-            is_first_run = 0;
-            send_times = 0;
-
             break;
         }
 
@@ -141,4 +157,20 @@ int main(void)
     }
 
     return 1;
+}
+
+uint8_t CheckCOM1State(void)
+{
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+
+    GPIO_InitTypeDef GPIO_InitStruct;
+    GPIO_InitStruct.Pin = GPIO_PIN_10;
+    GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+    if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_10) == GPIO_PIN_RESET)
+        return 1;
+    else
+        return 0;
 }
